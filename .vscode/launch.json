@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch ServerMain",
+            "request": "launch",
+            "mainClass": "br.usp.each.typerace.server.ServerMain",
+            "projectName": "server"
+        },
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            "env": {
+                "SCOOPUS_API": "37e2dd5f266836a649c824780a81717e"
+            }
+        }
+    ]
+}

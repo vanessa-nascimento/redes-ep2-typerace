@@ -18,8 +18,30 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        // TODO: Implementar
+
+        if(idValidator(conn)){
+            System.out.println("Valid");
+            String username = playerId(conn);
+            connections.put(username, conn);
+            conn.send("Welcome " + username);
+        }
     }
+
+    private String playerId(WebSocket conn) {
+        String connInfos = conn.getResourceDescriptor();
+        return connInfos.substring(connInfos.indexOf("username=") + 9);
+    }
+
+    private boolean idValidator(WebSocket conn) {
+        if(connections.containsKey(playerId(conn))) {
+            conn.send("Username already taken\n");
+            conn.close(1000, "invalidName");
+            return false;
+        }
+
+        return true;
+    }
+    
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
