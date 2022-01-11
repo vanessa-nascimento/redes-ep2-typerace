@@ -18,8 +18,10 @@ public class ServerMain {
     }
 
     public void init() {
-        System.out.println("Initializing server...");
-        server.start();
+        System.out.println("Iniciando servidor...");
+        // TODO: Implementar
+        this.server.start();
+        System.out.println("A client connected.");
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

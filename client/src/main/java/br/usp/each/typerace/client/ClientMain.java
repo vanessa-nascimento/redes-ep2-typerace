@@ -1,12 +1,15 @@
 package br.usp.each.typerace.client;
 
+import java.util.Scanner;
+
 import org.java_websocket.client.WebSocketClient;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Scanner;
 
 public class ClientMain {
+
+    private static final Scanner input = new Scanner(System.in);
 
     private WebSocketClient client;
 
@@ -15,54 +18,59 @@ public class ClientMain {
     }
 
     public void init(String username) {
-        System.out.println("Starting client " + username);
-        client.connect();
+        System.out.println("Conectando usuário " + username + " ao jogo...");
+        this.client.connect();
     }
 
     public static void main(String[] args) throws URISyntaxException {
-        
-        Scanner input = new Scanner(System.in);
-        System.out.println("\nType the adress of the server (defaults to ws://localhost:8080): ");
+        String urlServer = "ws://localhost:8080";
+        String username;
+
+        System.out.println("\nDigite o endereço do servidor (Aperte Enter caso deseje o servidor padrão ws://localhost:8080): ");
         String customServer = input.nextLine();
 
-        String finalServer = "ws://localhost:8080";
-
         if (!customServer.isEmpty()) {
-            finalServer = customServer;
-        }       
-
+            urlServer = customServer;
+        }
+       
         WebSocketClient client;
 
-        while(true) {
-
-            System.out.println("Insert an username");
-
-            String username = input.nextLine();
+        try {
+            
+            System.out.println("Qual é o seu nome de usuário?");
+            username = input.nextLine();
 
             if (username.isEmpty()) {
-                System.out.println("Empty name, plis insert a valid name");
-                continue;
+                System.out.println("Nome de suário vazio. Informe um nome válido.");
             }
 
-            finalServer += "/username=" + username;
+            client = new Client(new URI(urlServer + "/username=" + username));
 
-            client = new Client(new URI(finalServer));
             ClientMain main = new ClientMain(client);
-
             main.init(username);
+ 
+            while(true) {
+                String text = input.nextLine();
+                if(text.length() > 0) client.send(text);
 
-            System.out.println(client.isOpen());
-            if(client.isOpen()) {
-                break;
+                try {
+                    Thread.sleep(500);
+                }
+                catch(Exception e) {
+                    e.printStackTrace();
+                } 
+
+                if (client.isOpen()) {
+                    break;
+                }
             }
-        }
 
-        while(true) {
-            String in = input.nextLine();
-            client.send(in);
-        }
+            input.nextLine();
+            client.send("start");      
 
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            System.out.print(e.getMessage());
+        }
     }
-
-    
 }

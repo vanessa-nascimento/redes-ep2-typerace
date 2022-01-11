@@ -23,7 +23,7 @@ public class Server extends WebSocketServer {
             System.out.println("Valid");
             String username = playerId(conn);
             connections.put(username, conn);
-            conn.send("Welcome " + username);
+            conn.send("\nBoas vindas ao Jogo de Digitação, " + username + "!!");
         }
     }
 

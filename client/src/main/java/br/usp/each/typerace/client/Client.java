@@ -4,7 +4,6 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-
 public class Client extends WebSocketClient {
 
     public Client(URI serverUri) {
@@ -13,21 +12,32 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        // TODO: Implementar
+        System.out.println("\nVocê entrou. Conectado ao servidor.");
     }
 
     @Override
     public void onMessage(String message) {
-        // TODO: Implementar
+        if(message.length() > 0){
+            System.out.println(message);
+        } else {
+            System.out.println("Digite a palavra: " + message);
+        }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        // TODO: Implementar
+        if (code == 4000) {
+            System.out.println("Sessão finalizada. Motivo: " + reason);
+            System.exit(0);
+        }
+        else {
+            System.out.println("\nAté logo!");
+            System.exit(0);
+        }
     }
 
     @Override
     public void onError(Exception ex) {
-        // TODO: Implementar
+        System.out.println(ex);
     }
 }
